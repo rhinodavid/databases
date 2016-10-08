@@ -7,7 +7,18 @@ var Message = require('../db').Message;
 module.exports = {
   messages: {
     get: function (options, callback) {
- 
+      Message.sync()
+        .then(function() {
+          return Message.findAll({raw: true});
+        })
+        .then(function(messages) {
+          console.log(messages);
+          callback(null, {results: messages});
+          return;
+        })
+        .catch(function(err) {
+          callback(err, null);
+        });
     }, // a function which produces all the messages
     post: function(message, callback) {
       module.exports.users.post(message.username, function(err, result) {
@@ -15,7 +26,6 @@ module.exports = {
         if (err) {
           callback(err, null);
         } else {
-          console.log('result of user query:', result);
           Message.sync()
             .then(function() {
               return Message.create({
@@ -44,9 +54,10 @@ module.exports = {
         .then(function() {
           // find out if user exists
           // query with name .. if exists pass on id, if not create user
-          return User.findAll({where: {username: username}});
+          return User.findAll({where: {username: username}, raw: true});
         })
         .then(function(users) {
+          console.log(users);
           if (users.length === 0) {
             return User.create({username: username});
           } else {
