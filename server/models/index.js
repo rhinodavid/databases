@@ -3,7 +3,9 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (options, callback) {
-      var queryString = 'select users.name as username, messages.* from messages inner join users on messages.user_id = users.id';
+      var queryString = 'select users.name as username, messages.* from messages \
+      inner join users on messages.user_id = users.id \
+      order by messages.createdAt desc';
       db.query(queryString, function(err, results) {
         if (err) {
           callback(err, null);

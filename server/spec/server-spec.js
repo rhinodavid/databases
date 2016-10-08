@@ -123,5 +123,37 @@ describe('Persistent Node Chat Server', function() {
       done();
     });
   }); 
+
+  it('Should return messages in the reverse order they were created', function(done) {
+    request({
+      method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Valjean',
+        text: 'First message',
+        roomname: 'main'
+      }}, function() {
+      // wait one second
+      var now = Date.now();
+      while (Date.now() - now < 1000) {
+
+      }
+      request({
+        method: 'POST',
+        uri: 'http://127.0.0.1:3000/classes/messages',
+        json: {
+          username: 'David',
+          text: 'Second message',
+          roomname: 'main'
+        }}, function() {
+        request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+          var messageLog = JSON.parse(body).results;
+          expect(messageLog[0].text).to.equal('Second message');
+          expect(messageLog[1].text).to.equal('First message');
+          done();
+        });
+      });
+    });
+  });
 });
 
