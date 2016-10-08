@@ -73,7 +73,7 @@ describe('Persistent Node Chat Server', function() {
       json: {
         username: 'Valjean',
         text: 'All the Twix are gone!',
-        roomname: 'Hello'
+        roomname: 'main'
       }}, function() {
         // Now query the Node chat server and see if it returns
         // the message we just inserted:
