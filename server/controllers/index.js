@@ -9,7 +9,22 @@ module.exports = {
   users: {
     // Ditto as above
     get: function (req, res) {},
-    post: function (req, res) {}
+    post: function (req, res) {
+      // Get the username from the request body
+      var username = req.body.username;
+      // send the username to the model
+      models.users.post(username, function(error, data) {
+        if (error) {
+          throw error; // FIXME
+        } else {
+          res.status(201).send({ id: data.id });
+        }
+      });
+      //Expect the userId back 
+
+      // send that to response
+
+    }
   }
 };
 

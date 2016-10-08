@@ -9,7 +9,30 @@ module.exports = {
   users: {
     // Ditto as above.
     get: function () {},
+    post: function (username, callback) {
+      db.connect();
+
+      // atempt to insert to DB
+      var queryString = 'insert into users (name) values ("?")';
+      var queryArgs = [username];
+
+      dbConnection.query(queryString, queryArgs, function(err, results) {
+        db.end();
+        if (err) {
+          callback(err);
+        } else {
+          callback(results.id);
+        }
+      });
+
+    }
+  },
+
+  rooms: {
+    // Ditto as above.
+    get: function () {},
     post: function () {}
   }
+
 };
 
