@@ -42,6 +42,7 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'POST',
+      contentType: 'application/json',
       data: JSON.stringify(message),
       success: function (data) {
         // Clear messages input
