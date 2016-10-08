@@ -11,7 +11,7 @@ describe('Persistent Node Chat Server', function() {
   beforeEach(function(done) {
     dbConnection = mysql.createConnection({
       user: 'root',
-      password: 'password',
+      password: '',
       database: 'chat'
     });
     dbConnection.connect();
@@ -78,12 +78,29 @@ describe('Persistent Node Chat Server', function() {
         // Now query the Node chat server and see if it returns
         // the message we just inserted:
       request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
-        var messageLog = JSON.parse(body);
+        var messageLog = JSON.parse(body).results;
         expect(messageLog[0].text).to.equal('All the Twix are gone!');
         expect(messageLog[0].roomname).to.equal('main');
         done();
       });
     });
   });
+
+  it('Should respond with an object with an error property on error', function(done) {
+  // Send a message with no text
+    request({
+      method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Valjean',
+        // text property is required but missing - should throw an error
+        roomname: 'main'
+      }}, function(error, response, body) {
+      // json - sets body to JSON representation of value and adds Content-type: application/json header. 
+      // Additionally, parses the response body as JSON.
+      expect(body.error).to.exist;
+      done();
+    });
+  }); 
 });
 

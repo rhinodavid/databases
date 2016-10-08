@@ -5,9 +5,9 @@ module.exports = {
     get: function (req, res) {
       models.messages.get(null, function(err, results) {
         if (err) {
-          res.status(400).end('Error getting messages');
+          res.status(400).send({error: err});
         } else {
-          res.status(200).send(results);
+          res.status(200).send({results: results});
         }
 
       });
@@ -22,9 +22,9 @@ module.exports = {
 
       models.messages.post(message, function(err, results) {
         if (err) {
-          res.status(400).end('Error posting message.');
+          res.status(400).send({error: err});
         } else {
-          res.status(201).send({ id: results.insertId, createdAt: results.createdAt });
+          res.status(201).send({results: { id: results.insertId, createdAt: results.createdAt }});
         }
       });
     } // a function which handles posting a message to the database
@@ -40,12 +40,12 @@ module.exports = {
       models.users.post(username, function(err, results) {        
         if (err) {
           if (err.code === 'ER_DUP_ENTRY') {
-            res.status(400).end('User already exists.');
+            res.status(400).end({error: err}.message = 'User already exists.');
             return;
           }
-          res.status(400).end('Problem creating user.');
+          res.status(400).end({error: err});
         } else {
-          res.status(201).send({ id: results.insertId });
+          res.status(201).send({results: { id: results.insertId }});
         }
       });
     }
