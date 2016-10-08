@@ -13,17 +13,17 @@ module.exports = {
       // Get the username from the request body
       var username = req.body.username;
       // send the username to the model
-      models.users.post(username, function(error, data) {
-        if (error) {
-          throw error; // FIXME
+      models.users.post(username, function(err, results) {        
+        if (err) {
+          if (err.code === 'ER_DUP_ENTRY') {
+            res.status(400).end('User already exists.');
+            return;
+          }
+          res.status(400).end('Problem creating user.');
         } else {
-          res.status(201).send({ id: data.id });
+          res.status(201).send({ id: results.insertId });
         }
       });
-      //Expect the userId back 
-
-      // send that to response
-
     }
   }
 };

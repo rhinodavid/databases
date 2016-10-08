@@ -10,18 +10,15 @@ module.exports = {
     // Ditto as above.
     get: function () {},
     post: function (username, callback) {
-      db.connect();
-
       // atempt to insert to DB
       var queryString = 'insert into users (name) values ("?")';
       var queryArgs = [username];
 
-      dbConnection.query(queryString, queryArgs, function(err, results) {
-        db.end();
+      db.query(queryString, queryArgs, function(err, results) {
         if (err) {
-          callback(err);
+          callback(err, null);
         } else {
-          callback(results.id);
+          callback(null, results);
         }
       });
 
