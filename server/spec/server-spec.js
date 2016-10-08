@@ -18,9 +18,8 @@ describe('Persistent Node Chat Server', function() {
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
-    dbConnection.query('truncate ' + 'messages');
-    dbConnection.query('truncate ' + 'rooms');
-    dbConnection.query('truncate ' + 'users', done);
+    dbConnection.query('truncate ' + 'messages', done);
+    // dbConnection.query('truncate ' + 'users', done);
 
   });
 
@@ -41,7 +40,7 @@ describe('Persistent Node Chat Server', function() {
         uri: 'http://127.0.0.1:3000/classes/messages',
         json: {
           username: 'Valjean',
-          message: 'In mercy\'s name, three days is all I need.',
+          text: 'In mercy\'s name, three days is all I need.',
           roomname: 'Hello'
         }
       }, function () {
