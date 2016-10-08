@@ -86,6 +86,27 @@ describe('Persistent Node Chat Server', function() {
     });
   });
 
+  it('Should include the user name in the messages response', function(done) {
+    // insert a message into the database
+    request({
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Afsoon',
+        text: 'I\'m doing great.',
+        roomname: 'main'
+      },
+      method: 'POST'
+    }, function() {
+      // make a request to messages endpoint
+      request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+        var messageLog = JSON.parse(body).results;
+        expect(messageLog[0].username).to.exist;
+        expect(messageLog[0].username).to.equal('Afsoon');
+        done();
+      });
+    });
+  });
+
   it('Should respond with an object with an error property on error', function(done) {
   // Send a message with no text
     request({

@@ -3,7 +3,7 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (options, callback) {
-      var queryString = 'select * from messages';
+      var queryString = 'select users.name as username, messages.* from messages inner join users on messages.user_id = users.id';
       db.query(queryString, function(err, results) {
         if (err) {
           callback(err, null);
@@ -42,8 +42,8 @@ module.exports = {
     get: function () {},
     post: function(username, callback) {
       // atempt to insert to DB
-      var queryString = 'insert into users (name) values ("?") on \
-        duplicate key update id = last_insert_id(id), name="?"';
+      var queryString = 'insert into users (name) values (?) on \
+        duplicate key update id = last_insert_id(id), name=?';
 
       var queryArgs = [username, username];
 
