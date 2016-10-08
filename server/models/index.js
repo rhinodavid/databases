@@ -2,7 +2,18 @@ var db = require('../db');
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
+    get: function (options, callback) {
+      var queryString = 'select * from messages';
+      db.query(queryString, function(err, results) {
+        if (err) {
+          callback(err, null);
+        } else {
+          callback(null, results);
+        }
+      });
+    
+
+    }, // a function which produces all the messages
     post: function(message, callback) {
       // need user_id from username
       module.exports.users.post(message.username, function(err, results) {
@@ -11,7 +22,7 @@ module.exports = {
           callback(err, null);
         } else {
           var userId = results.insertId;
-          var queryString = 'insert into messages (user_id, room, text) values (?, ?, ?)';
+          var queryString = 'insert into messages (user_id, roomname, text) values (?, ?, ?)';
           var queryArgs = [userId, message.roomname, message.text];
 
           db.query(queryString, queryArgs, function(err, results) {
